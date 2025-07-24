@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSocket } from '../contexts/SocketProvider';
+import { useNavigate } from 'react-router-dom';
 
 interface Idata{
   email : string;
@@ -10,6 +11,7 @@ function Lobby() {
      const [email, setEmail] = useState<string | null>(null);
     const [room, setRoom] = useState<string | null>(null);
 
+    const navigate = useNavigate()
     const socket = useSocket();
 
     const handleSubmit = useCallback((e:any) => {
@@ -19,9 +21,9 @@ function Lobby() {
 
     const handleJoin = useCallback((data:Idata ) => {
       const {email, room} = data;
+      navigate(`/room/${room}`)
       console.log(email, room);
-
-    }, [])
+    }, [navigate])
 
     useEffect(() => {
       socket.on("room:join",handleJoin);
