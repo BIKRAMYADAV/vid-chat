@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSocket } from '../contexts/SocketProvider';
 
+interface Idata{
+  email : string;
+  room : string;
+}
+
 function Lobby() {
      const [email, setEmail] = useState<string | null>(null);
     const [room, setRoom] = useState<string | null>(null);
@@ -12,11 +17,18 @@ function Lobby() {
         socket.emit('room:join', {email, room})
     }, [email, room, socket])
 
-    useEffect(() => {
-      socket.on("room:join", (data:[string, string]) => {
-        console.log(`The data recieved from backend is ${data}`);
-      })
+    const handleJoin = useCallback((data:Idata ) => {
+      const {email, room} = data;
+      console.log(email, room);
+
     }, [])
+
+    useEffect(() => {
+      socket.on("room:join",handleJoin);
+      return () => {
+        socket.off('room:join', handleJoin)
+      }
+    }, [socket, handleJoin])
   return (
    
     <div>
