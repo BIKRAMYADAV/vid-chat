@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSocket } from '../contexts/SocketProvider'
-
+import ReactPlayer from 'react-player'
+import RoomVideo from '../components/RoomVideo';
 interface Idata{
   email : string;
   id : string;
@@ -8,7 +9,7 @@ interface Idata{
 
 function Room() {
     const [connectedSocket, setConnectedSocket] = useState<string | null>(null);
-    const [myStream, setMyStream] = useState<any | null>(null);
+    const [myStream, setMyStream] = useState<MediaStream | null>(null);
     const socket = useSocket();
 
     const handleUserJoined = useCallback(({email, id}:Idata) => {
@@ -36,6 +37,15 @@ useEffect(() => {
         {
             connectedSocket && <button onClick={handleCallUser}>CALL</button>
         }
+      {
+        myStream && (
+            <>
+            <h4>My Stream</h4>
+            {/* <ReactPlayer muted playing height={100} width={200} url={myStream}/> */}
+            <RoomVideo stream={myStream}/>
+            </>
+        )
+      }
     </div>
 
   )
