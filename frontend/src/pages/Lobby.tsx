@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSocket } from '../contexts/SocketProvider';
 
 function Lobby() {
@@ -11,6 +11,12 @@ function Lobby() {
         e.preventDefault();
         socket.emit('room:join', {email, room})
     }, [email, room, socket])
+
+    useEffect(() => {
+      socket.on("room:join", (data:[string, string]) => {
+        console.log(`The data recieved from backend is ${data}`);
+      })
+    }, [])
   return (
    
     <div>

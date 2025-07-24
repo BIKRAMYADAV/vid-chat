@@ -4,9 +4,17 @@ const io = new Server(8000, {
     cors:true
 })
 
+const emailToSocketId = new Map();
+const socketIdToEmail = new Map();
+
 io.on('connection', (socket) => {
     console.log('A new socket connected with id : ', socket.id);
     socket.on('room:join', data => {
-        console.log(data);
+        const {email, room} = data;
+        emailToSocketId.set(email, socket.id);
+        socketIdToEmail.set(socket.id, email);
+    io.to(socket.id).emit('room:join', data);
+
     })
+
 })
