@@ -106,34 +106,54 @@ useEffect(() => {
 }, [socket, handleUserJoined, handleIncomingCall, handleCallAccepted, handleNegoNeedFinal, handleNegoNeedIncoming])
 
   return (
-    <div>
-        <h1>Room</h1>
-        {connectedSocket ? <h4>connected</h4> : <h4>No one in the room</h4>}
-        {
-          remoteStream && <button onClick={sendStreams}>send stream</button>
-        }
-        {
-            connectedSocket && <button onClick={handleCallUser}>CALL</button>
-        }
-      {
-        myStream && (
-            <>
-            <h4>My Stream</h4>
-            {/* <ReactPlayer muted playing height={100} width={200} url={myStream}/> */}
-            <RoomVideo stream={myStream}/>
-            </>
-        )
-      }
-       {
-        remoteStream && (
-            <>
-            <h4>Remote Stream</h4>
-            {/* <ReactPlayer muted playing height={100} width={200} url={myStream}/> */}
-            <RoomVideo stream={remoteStream}/>
-            </>
-        )
-      }
-    </div>
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 px-4">
+  <h1 className="text-3xl font-bold mb-4">Room</h1>
+
+  <div
+    className={`mb-6 text-lg font-semibold px-4 py-2 rounded-lg ${
+      connectedSocket ? 'bg-green-600' : 'bg-red-600'
+    }`}
+  >
+    {connectedSocket ? 'Connected' : 'No one in the room'}
+  </div>
+
+  <div className="flex gap-4 mb-6">
+    {remoteStream && (
+      <button
+        onClick={sendStreams}
+        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"
+      >
+        Send Stream
+      </button>
+    )}
+
+    {connectedSocket && (
+      <button
+        onClick={handleCallUser}
+        className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition"
+      >
+        Call
+      </button>
+    )}
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+    {myStream && (
+      <div className="bg-gray-800 rounded-xl p-4 shadow-lg">
+        <h4 className="text-lg font-medium mb-2">My Stream</h4>
+        <RoomVideo stream={myStream} />
+      </div>
+    )}
+
+    {remoteStream && (
+      <div className="bg-gray-800 rounded-xl p-4 shadow-lg">
+        <h4 className="text-lg font-medium mb-2">Remote Stream</h4>
+        <RoomVideo stream={remoteStream} />
+      </div>
+    )}
+  </div>
+</div>
+
 
   )
 }
