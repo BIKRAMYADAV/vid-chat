@@ -10,6 +10,7 @@ interface Idata{
 function Lobby() {
      const [email, setEmail] = useState<string | null>(null);
     const [room, setRoom] = useState<string | null>(null);
+    const [inviteLink, setInviteLink] = useState<string | null>(null);
 
     const navigate = useNavigate()
     const socket = useSocket();
@@ -25,12 +26,27 @@ function Lobby() {
       console.log(email, room);
     }, [navigate])
 
+    const handleInvite = useCallback(() => {
+          const link = `${window.location.origin}/room/${room}`;
+          setInviteLink(link);
+    },[])
+
     useEffect(() => {
       socket.on("room:join",handleJoin);
       return () => {
         socket.off('room:join', handleJoin)
       }
     }, [socket, handleJoin])
+
+
+    //creating a unique room id
+    // useEffect(() => {
+    //   if(!room){
+    //     const newRoom = Math.random().toString(36).substring(2,10);
+    //     setRoom(newRoom);
+    //   }
+    // }, [])
+    console.log('invite link is ', inviteLink);
   return (
    <div className="min-h-screen flex items-center justify-center bg-gray-100">
   <form
@@ -65,6 +81,7 @@ function Lobby() {
     >
       Join
     </button>
+
   </form>
 </div>
 

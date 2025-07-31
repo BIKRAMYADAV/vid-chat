@@ -1,7 +1,9 @@
 import React, { useCallback, useDebugValue, useEffect, useState } from 'react'
 import { useSocket } from '../contexts/SocketProvider'
+import { useParams } from 'react-router-dom';
 import RoomVideo from '../components/RoomVideo';
 import peer from '../service/peer'
+import EmailModal from '../components/EmailModal';
 
 
 interface Idata{
@@ -13,6 +15,9 @@ function Room() {
     const [connectedSocket, setConnectedSocket] = useState<string | null>(null);
     const [myStream, setMyStream] = useState<MediaStream | null>(null);
     const [remoteStream, setRemoteStream] = useState<any>(null);
+     const [inviteLink, setInviteLink] = useState<string | null>(null);
+     const [modalOpen, setModalOpen] = useState<boolean>(false);
+    
     const socket = useSocket();
 
     const handleUserJoined = useCallback(({email, id}:Idata) => {
@@ -72,6 +77,19 @@ function Room() {
       await peer.setLocalDescription(ans);
     }, []);
 
+
+const { roomId } = useParams<{ roomId: string }>();
+console.log(roomId); // will log "1" for URL /room/1
+
+const handleInvite = useCallback(() => {
+    console.log('handle invite was called')
+    if (!roomId) return;
+    const link = `${window.location.origin}/room/${roomId}`;
+    setInviteLink(link);
+    setModalOpen(true);
+}, [roomId]);
+
+    
  
     useEffect(() => {
       peer.peer?.addEventListener("negotiationneeded", handleNegoNeeded);
@@ -116,6 +134,10 @@ useEffect(() => {
   >
     {connectedSocket ? 'Connected' : 'No one in the room'}
   </div>
+       <div className="text-sm text-gray-700 mt-4">
+    <button className="mt-1 p-2 bg-gray-200 rounded break-all hover:cursor-pointer"
+    onClick={handleInvite}>share meeting link</button>
+        </div>
 
   <div className="flex gap-4 mb-6">
     {remoteStream && (
@@ -151,6 +173,11 @@ useEffect(() => {
         <RoomVideo stream={remoteStream} />
       </div>
     )}
+    {
+      modalOpen && (
+        <EmailModal setModalOpen={setModalOpen} inviteLink={inviteLink}/>
+      )
+    }
   </div>
 </div>
 
