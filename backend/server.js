@@ -1,5 +1,27 @@
 const {Server} = require('socket.io')
+const dotenv = require('dotenv')
+const cors = require('cors')
 
+dotenv.config();
+const PORT = process.env.PORT 
+
+const express = require('express');
+const sendEmail = require('./routes/send-email');
+const { verifyMailer } = require('./controllers/verifyMailer');
+
+//express server
+const app = express()
+app.use(express.json())
+app.use(cors())
+
+verifyMailer()
+sendEmail(app);
+
+app.listen(PORT, () => {
+    console.log(`The server is listening on port ${PORT}`);
+})
+
+//socket server
 const io = new Server(8000, {
     cors:true
 })
@@ -35,3 +57,4 @@ io.on('connection', (socket) => {
         io.to(to).emit('peer:nego:final', {from:socket.id, ans});
     } )
 })
+

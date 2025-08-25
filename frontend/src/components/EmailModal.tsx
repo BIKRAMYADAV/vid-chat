@@ -20,7 +20,9 @@ function EmailModal({ setModalOpen, inviteLink }: any) {
 
   const handleSend = useCallback(async () => {
     try {
+      let sender = 'we-chat'
       const object = {
+        sender,
         emails,
         inviteLink,
       };
@@ -36,7 +38,7 @@ function EmailModal({ setModalOpen, inviteLink }: any) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative text-gray-900">
-        {/* Close Button */}
+  
         <button
           onClick={() => setModalOpen(false)}
           className="absolute top-2 right-3 text-gray-600 hover:text-red-500 text-xl font-bold"
@@ -44,10 +46,8 @@ function EmailModal({ setModalOpen, inviteLink }: any) {
           &times;
         </button>
 
-        {/* Modal Title */}
         <h2 className="text-xl font-semibold mb-4">Share Meeting Link</h2>
 
-        {/* Meeting Link */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Meeting Link</label>
           <input
